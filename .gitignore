@@ -1,0 +1,5 @@
+*Db.*
+migrations/
+venv/
+__pycache__/
+.vscode/
