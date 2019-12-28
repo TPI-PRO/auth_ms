@@ -5,4 +5,4 @@
 
 # Documentacion
 
-Para poder probar y ver los endpoints del api abrir el api.yaml en https://editor.swagger.io/
+Para poder probar y ver los endpoints del api abrir el archivo api.yaml en https://editor.swagger.io/
