@@ -26,7 +26,7 @@ def users():
                         output.append(user_data)
                 return jsonify({'users' : output})
 
-@app.route('/sign-up',methods=['POST'])
+@app.route('/users/sign',methods=['POST'])
 def signup():
         if request.method == 'POST':
                 nombres=request.json['nombres']
@@ -48,9 +48,9 @@ def signup():
                 person.set_password(request.json['password'])
                 db.session.add(person)
                 db.session.commit()
-                return jsonify({'message' : 'New user created!'})
+                return jsonify({'mensaje' : 'Nuevo usuario creado!'})
 
-@app.route('/login',methods=['POST'])
+@app.route('/users/login',methods=['POST'])
 def login():
         if request.method == 'POST':
                 username=request.json['username']
@@ -64,7 +64,7 @@ def login():
                 return jsonify({'token':token.decode('UTF-8')})
 
 #Default method get
-@app.route('/logout')
+@app.route('/users/logout')
 def logout():
         logout_user()
         return "Log out exitoso"

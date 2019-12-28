@@ -1,0 +1,10 @@
+venv/
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+migrations/
+.vscode/
+app.db
+__pycache__/

@@ -1,0 +1,96 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Microservicio de autenticacion 
+  description: Permite la creacion y logueo de usuarios. Fue desarrollado usando el lenguaje de python con el framework de flask y con una base de datos sqlite. Para la ejecucion de pruebas habilitar cors en el navegador, eso se realiza con una extension.
+host: localhost:5002
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /users/sign:
+    post:
+      tags:
+      - "Autenticacion"
+      summary: Crea usuarios en la base de datos
+      operationId: Create
+      parameters:
+        - name: Register
+          in: body
+          required: true
+          description: Registro de usuario
+          schema:
+            $ref: '#/definitions/Sign'
+      responses:
+        '200':
+          description: Nuevo usuario creado!
+  /users/login:
+    post:
+      tags:
+      - "Autenticacion"
+      summary: Permite el ingreso de usuarios
+      operationId: Ingresar
+      parameters:
+        - name: Logueo
+          in: body
+          required: true
+          description: Logueo de usuarios a la app
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        200:
+          description: Token
+  /users:
+    get:
+      tags:
+      - Autenticacion
+      summary: Obtiene todos los usuarios de la base de datos
+      operationId: AllUsers
+      responses:
+        200:
+          description: Lista de usuarios
+          
+  /users/logout:
+    get:
+      tags:
+      - Autenticacion
+      summary: Cerrar sesion del usuario 
+      operationId: Quit 
+      responses:
+        200:
+          description: Log out exitoso
+    
+      
+    
+
+definitions:
+
+  Login:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  Sign:
+    type: object
+    properties:
+      nombres:
+        type: string
+      apellidos:
+        type: string
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      rol:
+        type: boolean
+      descripcion: 
+        type: string
+      fecha:
+        type: string
