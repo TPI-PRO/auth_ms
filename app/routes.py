@@ -10,9 +10,9 @@ import datetime
 
 @app.route('/')
 def index():
-    return "Hello, World! Andres"
+    return "Hello, World!"
 
-@app.route('/users',methods=['GET'])
+@app.route('/users',methods=['GET','DELETE','POST','PUT'])
 def users():
         if request.method=='GET':
                 people=User.query.all()
@@ -24,10 +24,13 @@ def users():
                         user_data['apellidos'] = user.apellidos
                         user_data['username']=user.username
                         output.append(user_data)
-                return jsonify({'users' : output})
-
-@app.route('/users/sign',methods=['POST'])
-def signup():
+                return jsonify(output)
+        if request.method == 'DELETE':
+                db.session.query(User).delete()
+                db.session.commit()
+                if len(User.query.all()) == 0:
+                        return jsonify({'mensaje': 'Eliminacion de usuarios satisfactoria!'})
+                return jsonify({'mensaje':'No se pudo eliminar a los usuarios'})
         if request.method == 'POST':
                 nombres=request.json['nombres']
                 apellidos=request.json['apellidos']
@@ -49,7 +52,7 @@ def signup():
                 db.session.add(person)
                 db.session.commit()
                 return jsonify({'mensaje' : 'Nuevo usuario creado!'})
-
+       
 @app.route('/users/login',methods=['POST'])
 def login():
         if request.method == 'POST':
@@ -61,7 +64,7 @@ def login():
                         return "No logueado"
                 token = jwt.encode({'public_id':usuario.public_id,'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},app.config['SECRET_KEY'])
                 login_user(usuario)
-                return jsonify({'token':token.decode('UTF-8')})
+                return jsonify(token.decode('UTF-8'))
 
 #Default method get
 @app.route('/users/logout')

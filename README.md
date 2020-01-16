@@ -6,3 +6,5 @@
 # Documentacion
 
 Para poder probar y ver los endpoints del api abrir el api.yaml en editor.swagger.io
+
+Pd: El rol se modelo con un booleano donde 1 es un profesor y 0 es un administrador
