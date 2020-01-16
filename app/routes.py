@@ -5,6 +5,7 @@ import uuid
 from flask_login import current_user,logout_user,login_user
 import jwt 
 import datetime
+import json
 
 
 
@@ -23,6 +24,10 @@ def users():
                         user_data['nombres'] = user.nombres
                         user_data['apellidos'] = user.apellidos
                         user_data['username']=user.username
+                        user_data['email']=user.email
+                        user_data['rol']=user.rol
+                        user_data['descripcion']=user.descripcion
+                        user_data['fecha']=user.fecha
                         output.append(user_data)
                 return jsonify(output)
         if request.method == 'DELETE':
@@ -52,6 +57,44 @@ def users():
                 db.session.add(person)
                 db.session.commit()
                 return jsonify({'mensaje' : 'Nuevo usuario creado!'})
+
+        if request.method == 'PUT':
+                public_id = request.json['public_id']
+                user = User.query.filter_by(public_id=public_id).first()
+                if user == None:
+                        return jsonify({'mensaje':'No existe el usuario'})
+                user.nombres=request.json['nombres']
+                user.apellidos=request.json['apellidos']
+                varuser = request.json['username']
+                if User.query.filter_by(username=varuser).first() is not None:
+                        return jsonify({'mensaje':'Ese usuario ya existe por favor seleccione otro'})
+                user.username=varuser
+                user.rol=request.json['rol']
+                user.descripcion=request.json['descripcion']
+                db.session.commit()
+                return jsonify({'mensaje':'Actualizacion exitosa'})
+
+#Some basic search by username or email
+@app.route('/users/username/<username>',methods=['GET','DELETE'])
+def searchbyUsername(username):
+        if request.method == 'GET':
+                user = User.query.filter((User.username==username) | (User.email==username) ).first()
+                if user == None:
+                        return jsonify({'mensaje':'Ese usuario no existe'})
+                conv = {}
+                conv['public_id'] = user.public_id
+                conv['nombres'] = user.nombres
+                conv['apellidos'] = user.apellidos
+                conv['username']=user.username
+                conv['email']=user.email
+                conv['rol']=user.rol
+                conv['descripcion']=user.descripcion
+                conv['fecha']=user.fecha
+                return jsonify(conv)
+        if request.method == 'DELETE':
+                User.query.filter((User.username==username)|(User.email==username)).delete()
+                db.session.commit()
+                return jsonify({'mensaje':'Usuario eliminado correctamente'})
        
 @app.route('/users/login',methods=['POST'])
 def login():
