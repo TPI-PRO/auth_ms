@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   version: 1.0.0
   title: Microservicio de autenticacion 
-  description: Permite la creacion y logueo de usuarios. Fue desarrollado usando el lenguaje de python con el framework de flask y con una base de datos sqlite. Para la ejecucion de pruebas habilitar cors en el navegador, eso se realiza con una extension.
+  description: Permite la creacion y logueo de usuarios. Fue desarrollado usando el lenguaje de python con el framework de flask y con una base de datos sqlite. Para la ejecucion de pruebas ejecutar el microservicio y  habilitar cors en el navegador, eso se realiza con una extension.
 host: localhost:5002
 schemes:
   - http
@@ -11,26 +11,83 @@ consumes:
 produces:
   - application/json
 paths:
-  /users/sign:
+  /users:
     post:
       tags:
-      - "Autenticacion"
-      summary: Crea usuarios en la base de datos
-      operationId: Create
+      - "Basico autenticacion"
+      summary: "Crear usuarios en la base de datos"
+      operationId: "Create"
       parameters:
-        - name: Register
-          in: body
-          required: true
-          description: Registro de usuario
-          schema:
-            $ref: '#/definitions/Sign'
+      - in: "body"
+        name: "Creation"
+        description: "Registro de usuario"
+        schema:
+          $ref: "#/definitions/Sign"
       responses:
-        '200':
-          description: Nuevo usuario creado!
+        200:
+          description: "Nuevo usuario creado!"
+    put:
+      tags:
+      - "Basico autenticacion"
+      summary: "Actualizar usuario de la base de datos"
+      operationId: "Update"
+      parameters:
+      - in: "body"
+        name: "Update"
+        description: "Registro de usuario"
+        schema:
+          $ref: "#/definitions/Update"
+      responses:
+        200:
+          description: "Actualizacion exitosa"
+    delete:
+      tags: 
+        - "Basico autenticacion"
+      summary: "Elimina usuarios de la base de datos"
+      operationId: "DeleteUsers"
+      responses:
+        200:
+          description: "  Eliminacion de usuarios satisfactoria!"
+    get:
+      tags: 
+        - "Basico autenticacion"
+      summary: "Obtener todos los usuarios de la base de datos"
+      operationId: "Obtener"
+      responses:
+        200:
+          description: Sign
+          
+  /users/username/{username}:
+    get:
+      tags: 
+        - "Busqueda y eliminacion"
+      summary: "Obtener un usuario por username o correo"
+      operationId: "GetbyUsername"
+      parameters:
+      - in: path
+        name: username
+        type: string
+        required: true
+      responses:
+        200:
+          description: Sign
+    delete:
+      tags:
+        - "Busqueda y eliminacion"
+      summary: "Eliminar un usuario dado un username o correo"
+      operationId: "DeleteUser"
+      parameters:
+      - in: path
+        name: username
+        type: string
+        required: true
+      responses:
+        200:
+          description: "Usuario eliminado correctamente"
   /users/login:
     post:
       tags:
-      - "Autenticacion"
+      - "Logueo"
       summary: Permite el ingreso de usuarios
       operationId: Ingresar
       parameters:
@@ -43,29 +100,17 @@ paths:
       responses:
         200:
           description: Token
-  /users:
-    get:
-      tags:
-      - Autenticacion
-      summary: Obtiene todos los usuarios de la base de datos
-      operationId: AllUsers
-      responses:
-        200:
-          description: Lista de usuarios
+
           
   /users/logout:
     get:
       tags:
-      - Autenticacion
+      - "Logueo"
       summary: Cerrar sesion del usuario 
       operationId: Quit 
       responses:
         200:
           description: Log out exitoso
-    
-      
-    
-
 definitions:
 
   Login:
@@ -93,4 +138,19 @@ definitions:
       descripcion: 
         type: string
       fecha:
+        type: string
+  Update:
+    type: object
+    properties:
+      public_id:
+        type: string
+      nombres:
+        type: string
+      apellidos:
+        type: string
+      username:
+        type: string
+      rol:
+        type: boolean
+      descripcion: 
         type: string
